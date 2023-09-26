@@ -1,29 +1,17 @@
-const path = require("path");
+const EventEmitter = require("events");
 
-const fs = require("fs");
+const emitter = new EventEmitter();
 
-// console.log(path.join(__filename, "api", "script.js"));
-
-const user = "Rohan";
-
-// fs.writeFile(
-//   path.join(__dirname, "/api", "api.txt"),
-//   `User name: ${user}`,
-//   (err) => {
-//     if (err) throw err;
-//   }
-// );
-
-// fs.appendFile(
-//   path.join(__dirname, "/api", "api.txt"),
-//   `\n \t User name: ${user}`,
-//   (err) => {
-//     if (err) throw err;
-//   }
-// );
-
-fs.readFile(path.join(__dirname, "/api", "api.txt"), "utf8", (err, data) => {
-  if (err) throw err;
-
-  console.log(data);
+emitter.on("message", (data) => {
+  console.log(data.text);
 });
+
+emitter.on("logout", (data) => {
+  console.log(data.text);
+});
+
+emitter.emit("message", { text: "User logged" });
+
+emitter.emit("message", { text: "User went to about page" });
+
+emitter.emit("logout", { text: "User logout" });
