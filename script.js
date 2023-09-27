@@ -1,17 +1,34 @@
-const EventEmitter = require("events");
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
 
-const emitter = new EventEmitter();
+const server = http.createServer((req, res) => {
+  if (req.url === "/") {
+    fs.readFile(
+      path.join(__dirname, "views", "index.html"),
+      "utf8",
+      (err, data) => {
+        if (err) throw err;
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.end(data);
+      }
+    );
+  } 
+  
+  if (req.url === "/contact") {
+    fs.readFile(
+      path.join(__dirname, "views", "contact.html"),
+      "utf8",
+      (err, data) => {
+        if (err) throw err;
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.end(data);
+      }
+    );
+  } 
 
-emitter.on("message", (data) => {
-  console.log(data.text);
 });
 
-emitter.on("logout", (data) => {
-  console.log(data.text);
-});
+const PORT = process.env.PORT || 3001;
 
-emitter.emit("message", { text: "User logged" });
-
-emitter.emit("message", { text: "User went to about page" });
-
-emitter.emit("logout", { text: "User logout" });
+server.listen(PORT, () => console.log(`Server running on ${PORT}`));
